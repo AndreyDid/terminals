@@ -16,13 +16,13 @@ function App() {
         <AppLoader>
                 <div>
                     <Switch>
-                        <Route path='/work-terminals/:id?/editWork' component={EditWorkPage}/>
-                        <Route path='/work-terminals/:id?/editTerminal' component={EditTerminalPage}/>
+                        <Route path='/terminals/:id?/editWork' component={EditWorkPage}/>
+                        <Route path='/terminals/:id?/editTerminal' component={EditTerminalPage}/>
                         <Route path='/createExtraWorks' component={CreateExtraWorks}/>
                         <Route path='/createWorks' component={CreateWorks}/>
                         <Route path='/createBody' component={CreateBody}/>
                         <Route path='/createTerminal' component={CreateTerminal}/>
-                        <Route path='/work-terminals' exact component={Terminals}/>
+                        <Route path='/terminals' exact component={Terminals}/>
                     </Switch>
                 </div>
         </AppLoader>
