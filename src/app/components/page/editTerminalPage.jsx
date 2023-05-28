@@ -94,6 +94,7 @@ const EditTerminalPage = () => {
         const allWorksPrice = sumPrice(worksPrice)
         const newData = {
             ...data,
+            number: Number(data.number),
             works: data.works.map(w => w.value),
             body: data.body.value,
             sum: Number(data.sum) + allWorksPrice

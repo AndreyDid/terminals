@@ -80,8 +80,8 @@ const TerminalsTable = ({data, extraWorks}) => {
     //--------------------------------------------------
 
     const handleClick = (id) => {
-        history.push(history.location.pathname + `/${id}/editTerminal`)
-        // history.push(history.location.pathname + `${id}/editTerminal`)
+        // history.push(history.location.pathname + `/${id}/editTerminal`)
+        history.push(history.location.pathname + `${id}/editTerminal`)
     }
 
     const handleDelete = (id) => {
