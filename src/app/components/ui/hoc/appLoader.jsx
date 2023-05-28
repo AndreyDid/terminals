@@ -4,6 +4,7 @@ import {getIsLoggedIn, getTerminalLoadingStatus, loadTerminalList} from "../../.
 import {loadBodyList} from "../../../store/body";
 import {loadWorkList} from "../../../store/works";
 import {loadExtraWorkList} from "../../../store/extraWorks";
+import Loader from "../../common/loader";
 
 const AppLoader = ({ children }) => {
     const dispatch = useDispatch()
@@ -19,7 +20,7 @@ const AppLoader = ({ children }) => {
         dispatch(loadExtraWorkList())
         }
     }, [isLoggedIn])
-if (terminalStatusLoading) return 'Loading'
+if (terminalStatusLoading) return <Loader />
     return children
 }
 
