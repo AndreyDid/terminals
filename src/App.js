@@ -33,7 +33,7 @@ function App() {
 						<Route path='/createSetting' component={CreateSetting} />
 						<Route path='/createBody' component={CreateBody} />
 						<Route path='/createTerminal' component={CreateTerminal} />
-						<Route path='/' exact component={Terminals} />
+						<Route path='/terminals' exact component={Terminals} />
 					</Switch>
 				</AppLoader>
 			</ThemeProvider>
