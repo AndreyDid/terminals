@@ -1,0 +1,54 @@
+
+.custom-select {
+  &__control {
+    background-color: var(--input-background-color) !important;
+    border-radius: 5px !important;
+    border: 1px solid var(--select-border-color) !important;
+    box-shadow: none !important;
+
+    &--menu-is-open {
+      border-color: var(--button-border-color) !important;
+    }
+  }
+
+  &__value-container {
+      padding: 5px !important;
+      cursor: pointer !important;
+    }
+    &__indicators {
+        cursor: pointer !important;
+    }
+    &__indicator {
+        color: var(--text-color-secondary)!important;
+
+        &:hover {
+            color: var(--text-color-secondary-hover)!important;
+        }
+    }
+
+    &__single-value {
+        color: var(--button-text-color) !important;
+    }
+
+    &__menu {
+        background-color: var(--button-background-color) !important;
+        color: var(--button-text-color);
+    }
+    &__menu-list::-webkit-scrollbar {
+        width: 10px
+    }
+    &__menu-list::-webkit-scrollbar-thumb {
+        background-color: var(--select-background-color);    /* цвет плашки */
+        border-radius: 20px;       /* закругления плашки */
+        border: 1px solid var(--button-border-color);  /* padding вокруг плашки */
+    }
+    &__option {
+        cursor: pointer !important;
+        &--is-focused {
+            background-color: var(--select-background-color) !important;
+        }
+        &--is-selected {
+            background-color: var(--select-background-color) !important;
+        }
+    }
+}

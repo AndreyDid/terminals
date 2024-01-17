@@ -1,24 +1,53 @@
 import React, {useEffect, useState} from "react";
-import {getTerminalById, updateTerminal} from "../../store/terminals";
+import {getTerminalById, getTerminalByOrderId, removeTerminal, updateTerminal} from "../../store/terminals";
 import {useSelector} from "react-redux";
 import {getBodyById} from "../../store/body";
 import {sumPrice} from "../../utils/sumPrice";
 import TextField from "../inputs/textField";
 import SelectField from "../inputs/selectField";
-import MultiSelectField from "../inputs/multiSelectField";
+import MultiSelectField from "../inputs/multiSelectField/multiSelectField";
 import Button from "../common/button";
 import ContainerFormWrapper from "../common/containerForm";
 import SelectDataField from "../inputs/selectDataField";
 import useTerminals from "../../hooks/useTerminals";
+import _ from "lodash";
+import {morph} from "../../utils/morph";
 
 const EditTerminalPage = () => {
     const [data, setData] = useState()
+
+    const [value, setValue] = useState('')
+
+    const [updateOrder, setUpdateOrder] = useState(false)
+
+    const validatorConfig = {
+        number: {
+            isRequired: {
+                message: "Это поле обязательно для заполнения"
+            }
+        },
+        body: {
+            isRequired: {
+                message: "Это поле обязательно для заполнения"
+            }
+        },
+        works: {
+            isRequired: {
+                message: "Это поле обязательно для заполнения"
+            }
+        },
+        sum: {
+            isRequired: {
+                message: "Это поле обязательно для заполнения"
+            }
+        },
+    };
 
     const {
         history,
         params,
         dispatch,
-        body,
+        bodies,
         works,
         workLoading,
         bodyLoading,
@@ -26,8 +55,16 @@ const EditTerminalPage = () => {
         setIsLoading,
         month,
         year,
-        handleChange
-    } = useTerminals(setData)
+        handleChange,
+        isValid,
+        validate,
+        errors,
+        setting,
+        settingLoading
+    } = useTerminals(data, setData, validatorConfig)
+
+    const sumTerminalDefault = !settingLoading && setting[0].sumTerminal
+    const sumPgiDefault = !settingLoading && setting[0].sumPgi
 
     const {id} = params
 
@@ -35,17 +72,25 @@ const EditTerminalPage = () => {
 
     const currentBody = useSelector(getBodyById(currentTerminal.body))
 
+    const order = useSelector(getTerminalByOrderId(currentTerminal.singleOrder))
+
     const transformBody = {
         label: currentBody === undefined ? 'Error' : currentBody.name,
         value: currentBody === undefined ? 'Error' : currentBody._id
     }
 
-    const bodyList = body.map(b => ({
+    function filterName(arr) {
+        return _.orderBy(arr, ['name'], ['asc'])
+    }
+
+    const filterBodyName = filterName(bodies)
+    const bodyList = filterBodyName.map(b => ({
         label: b.name,
         value: b._id
     }))
 
-    const worksList = works.map(b => ({
+    const filterWorksName = filterName(works)
+    const worksList = filterWorksName.map(b => ({
         label: b.name,
         value: b._id,
         sum: b.sum
@@ -75,11 +120,11 @@ const EditTerminalPage = () => {
 
     useEffect(() => {
         if (!bodyLoading && !workLoading && transformBody && currentTerminal && !data) {
-            setData(prevState => ({
+            setData({
                 ...currentTerminal,
                 body: transformBody,
                 works: transformData(currentTerminal.works)
-            }))
+            })
         }
     }, [bodyLoading, workLoading, currentTerminal, transformBody, data])
     useEffect(() => {
@@ -88,32 +133,74 @@ const EditTerminalPage = () => {
         }
     }, [data])
 
+    const handleDelete = (id) => {
+        dispatch(removeTerminal(id))
+        history.goBack()
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         const worksPrice = data.works.map(s => s.sum)
         const allWorksPrice = sumPrice(worksPrice)
+        const isValid = validate();
+        if (!isValid) return;
         const newData = {
             ...data,
+            checkBox: false,
             number: Number(data.number),
             works: data.works.map(w => w.value),
             body: data.body.value,
-            sum: Number(data.sum) + allWorksPrice
+            sum:
+                data.body.label === 'ПГИ'
+                    ? Number(sumPgiDefault) + allWorksPrice
+                    : Number(sumTerminalDefault) + allWorksPrice,
         }
-        dispatch(
-            updateTerminal({...newData})
-        )
+        if (updateOrder) {
+            for (const items of order) {
+                const newDataOrder = {
+                    ...data,
+                    _id: items._id,
+                    number: Number(items.number),
+                    works: data.works.map(w => w.value),
+                    body: data.body.value,
+                    sum:
+                        data.body.label === 'ПГИ'
+                            ? Number(sumPgiDefault) + allWorksPrice
+                            : Number(sumTerminalDefault) + allWorksPrice,
+                }
+                setValue(items.number)
+                dispatch(updateTerminal({...newDataOrder}));
+            }
+        } else {
+            dispatch(
+                updateTerminal({...newData})
+            )
+        }
+        history.goBack()
     }
 
     function handleIncrement() {
-        return setData(prevState => ({...data, number: Number(data.number) + Number(1)}))
+        return setData(prevState => ({...prevState, number: Number(data.number) + Number(1)}))
     }
 
     return (
         <>
-            {!isLoading && body.length > 0 && works.length > 0 && (
+            {!isLoading && bodies.length > 0 && works.length > 0 && (
                 <ContainerFormWrapper>
                     <form onSubmit={handleSubmit}>
-                        <h2 className='text-secondary'>Редактировать терминал</h2>
+                        <div className='d-flex justify-content-between'>
+                            <h2 className='text-secondary'>Редактировать терминал</h2>
+                            <div className='d-flex align-items-center justify-content-end'>
+                                <Button
+                                    type='button'
+                                    color='danger'
+                                    size='btn-sm'
+                                    rounded='rounded-1'
+                                    icon={<i className="bi bi-trash"></i>}
+                                    onClick={() => handleDelete(data._id)}
+                                />
+                            </div>
+                        </div>
                         <SelectDataField
                             month={month}
                             year={year}
@@ -123,11 +210,19 @@ const EditTerminalPage = () => {
                         <TextField
                             type='number'
                             count={true}
-                            label={'№ терминала'}
+                            label='№ терминала'
                             name='number'
                             value={data.number}
                             onChange={handleChange}
                             increment={handleIncrement}
+                            error={errors.number}
+                        />
+                        <TextField
+                            type='text'
+                            label='Город'
+                            name='city'
+                            value={data.city}
+                            onChange={handleChange}
                         />
                         <SelectField
                             label='Корпус'
@@ -135,40 +230,62 @@ const EditTerminalPage = () => {
                             options={bodyList}
                             onChange={handleChange}
                             defaultValue={data.body}
+                            error={errors.body}
                         />
                         <MultiSelectField
-                            label={'Выбрать доработки'}
+                            label='Выбрать доработки'
                             defaultOption='Доработки...'
                             name='works'
                             options={worksList}
                             onChange={handleChange}
                             defaultValue={data.works}
+                            error={errors.works}
                         />
                         <TextField
-                            label={'Сумма'}
+                            label='Сумма'
                             type='number'
                             name='sum'
-                            value={data.sum = 1000}
+                            value={data.body.label === 'ПГИ' ? Number(sumPgiDefault) : Number(sumTerminalDefault)}
                             onChange={handleChange}
                             isDisabled={true}
+                            error={errors.sum}
                         />
-                        <div className="d-flex justify-content-between">
-                            <Button
-                                type="submit"
-                                color="light"
-                                rounded="rounded-1"
-                                border="border"
-                                label="OK"
-                            />
-                            <Button
-                                type="button"
-                                color="light"
-                                onClick={() => history.goBack()}
-                                icon={<i className="bi bi-x-lg"></i>}
-                                border='border'
-                                rounded="rounded-1"
-                            />
-                        </div>
+                        {!value ? (
+                            <div>
+                                <div className='d-flex justify-content-center mb-4'>
+                                    {order.length > 1 && (
+                                        <Button
+                                            type="submit"
+                                            color="light"
+                                            rounded="rounded-1"
+                                            label={`Обновить весь заказ ( ${order.length} ${morph(order.length)} )`}
+                                            disabled={!isValid}
+                                            onClick={() => setUpdateOrder(true)}
+                                        />
+                                    )}
+                                </div>
+                                <div className="d-flex justify-content-between">
+                                    <Button
+                                        type="submit"
+                                        color="light"
+                                        rounded="rounded-1"
+                                        label="OK"
+                                        disabled={!isValid}
+                                    />
+
+                                    <Button
+                                        type="button"
+                                        color="light"
+                                        onClick={() => history.goBack()}
+                                        icon={<i className="bi bi-x-lg"></i>}
+                                        rounded="rounded-1"
+                                    />
+                                </div>
+
+                            </div>
+                        ) : (
+                            <h3>Обновление терминалов: {value}</h3>
+                        )}
                     </form>
                 </ContainerFormWrapper>
             )}

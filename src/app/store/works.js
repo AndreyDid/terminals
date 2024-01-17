@@ -75,7 +75,7 @@ export const createWork = (payload) => async (dispatch) => {
     dispatch(workCreateRequested());
     const work = {
         ...payload,
-        _id: nanoid()
+        _id: nanoid(),
     }
     await workService.createWork(work);
     dispatch(workCreated(work));

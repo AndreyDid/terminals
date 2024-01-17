@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createAction, createSlice} from "@reduxjs/toolkit";
 import {nanoid} from "nanoid";
 import extraWorksService from "../services/extraWorks.services";
 
@@ -43,7 +43,12 @@ const {
     extraWorksReceived,
     extraWorksRequestFailed,
     extraWorkCreated,
-    } = actions;
+    extraWorkRemove,
+    extraWorkUpdate
+} = actions;
+
+const extraWorkRemoveRequested = createAction("extraWorks/extraWorkRemoveRequested");
+const extraWorkUpdateRequested = createAction("extraWorks/extraWorkUpdateRequested");
 
 export const getExtraWork = () => (state) => state.extraWorks.entities;
 export const getExtraWorkLoadingStatus = () => (state) =>
@@ -66,6 +71,25 @@ export const createExtraWork = (payload) => async (dispatch) => {
     }
     await extraWorksService.createExtraWork(extraWork);
     dispatch(extraWorkCreated(extraWork));
+};
+
+export const removeExtraWorks = (workId) => async (dispatch) => {
+    dispatch(extraWorkRemoveRequested());
+    await extraWorksService.removeExtraWork(workId);
+    dispatch(extraWorkRemove(workId));
+};
+
+export const updateExtraWorks = (payload) => async (dispatch) => {
+    dispatch(extraWorkUpdateRequested());
+    await extraWorksService.updateExtraWork(payload);
+    dispatch(extraWorkUpdate(payload));
+};
+
+
+export const getExtraWorksById = (id) => (state) => {
+    if (state.extraWorks.entities) {
+        return state.extraWorks.entities.find((a) => a._id === id);
+    }
 };
 
 export default extraWorksReducer;

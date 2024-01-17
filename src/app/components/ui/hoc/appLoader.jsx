@@ -5,8 +5,9 @@ import {loadBodyList} from "../../../store/body";
 import {loadWorkList} from "../../../store/works";
 import {loadExtraWorkList} from "../../../store/extraWorks";
 import Loader from "../../common/loader";
+import {loadSettingList} from "../../../store/settings";
 
-const AppLoader = ({ children }) => {
+const AppLoader = ({children}) => {
     const dispatch = useDispatch()
     const terminalStatusLoading = useSelector(getTerminalLoadingStatus())
 
@@ -14,13 +15,14 @@ const AppLoader = ({ children }) => {
 
     useEffect(() => {
         if (isLoggedIn) {
-        dispatch(loadTerminalList())
-        dispatch(loadBodyList())
-        dispatch(loadWorkList())
-        dispatch(loadExtraWorkList())
+            dispatch(loadTerminalList())
+            dispatch(loadBodyList())
+            dispatch(loadWorkList())
+            dispatch(loadExtraWorkList())
+            dispatch((loadSettingList()))
         }
     }, [isLoggedIn])
-if (terminalStatusLoading) return <Loader />
+    if (terminalStatusLoading) return <Loader/>
     return children
 }
 

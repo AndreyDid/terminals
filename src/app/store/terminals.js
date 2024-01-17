@@ -1,6 +1,7 @@
 import {createAction, createSlice} from "@reduxjs/toolkit";
 import terminalService from "../services/terminal.services";
 import {nanoid} from "nanoid";
+import {toast} from "react-toastify";
 
 const TerminalSlice = createSlice({
     name: "terminals",
@@ -49,6 +50,7 @@ const {
     terminalUpdate
 } = actions;
 
+const terminalCreateRequested = createAction("terminals/terminalCreateRequested");
 const terminalUpdateRequested = createAction("terminals/terminalUpdateRequested");
 
 export const getTerminal = () => (state) => state.terminals.entities;
@@ -66,19 +68,37 @@ export const loadTerminalList = () => async (dispatch) => {
 };
 
 export const removeTerminal = (terminalId) => async (dispatch) => {
-       await terminalService.removeTerminal(terminalId);
-            dispatch(terminalRemove(terminalId));
+    await terminalService.removeTerminal(terminalId);
+    dispatch(terminalRemove(terminalId));
 };
 
-export const createTerminal = (payload) => async (dispatch) => {
-    const terminal = {
-        ...payload,
-        _id: nanoid(),
-        created_at: Date.now()
-    }
-    await terminalService.createTerminal(terminal);
-        dispatch(terminalCreated(terminal));
-};
+export const createTerminal = (payload) =>
+    async (dispatch) => {
+        dispatch(terminalCreateRequested());
+        try {
+            const terminal = {
+                ...payload,
+                check: false,
+                _id: nanoid(),
+                created_at: Date.now(),
+            }
+            await terminalService.createTerminal(terminal);
+            dispatch(terminalCreated(terminal));
+            toast.info(`${payload.number} успешно добавлен`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+
+        } catch (error) {
+            toast('Error')
+        }
+    };
 
 
 export const getIsLoggedIn = () => state => state.terminals.isLoggedIn
@@ -86,8 +106,8 @@ export const getIsLoggedIn = () => state => state.terminals.isLoggedIn
 
 export const updateTerminal = (payload) => async (dispatch) => {
     dispatch(terminalUpdateRequested());
-         await terminalService.updateTerminal(payload);
-        dispatch(terminalUpdate(payload));
+    await terminalService.updateTerminal(payload);
+    dispatch(terminalUpdate(payload));
 
 };
 
@@ -96,5 +116,11 @@ export const getTerminalById = (id) => (state) => {
         return state.terminals.entities.find((a) => a._id === id);
     }
 };
+
+export const getTerminalByOrderId = (id) => (state) => {
+    if (state.terminals.entities) {
+        return state.terminals.entities.filter((a) => a.singleOrder === id);
+    }
+}
 
 export default terminalsReducer;

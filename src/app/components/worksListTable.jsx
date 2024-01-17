@@ -1,14 +1,17 @@
-import React from "react";
+ import React from "react";
 import {removeWork} from "../store/works";
 import Button from "./common/button";
 import history from "../utils/history";
 import useTerminals from "../hooks/useTerminals";
+import _ from "lodash";
 
 const WorksListTable = () => {
     const {dispatch, works, workLoading} = useTerminals()
 
+    const filterWorksSum = _.orderBy(works, ['sum'], ['asc'])
+
     const handleClick = (id) => {
-        history.push( `/work-terminals/${id}/editWork`)
+        history.push( `/${id}/editWork`)
     }
     const handleDelete = (id) => {
         dispatch(removeWork(id))
@@ -16,10 +19,10 @@ const WorksListTable = () => {
 
     return (
         <div>
-            {!workLoading && (
+            {!workLoading && filterWorksSum.length > 0 && (
                 <table className="table">
                     <tbody>
-                    {works.map(work => (
+                    {filterWorksSum.map(work => (
                         <tr key={work._id}>
                             <td>{work.name}</td>
                             <td>{work.sum}</td>
@@ -30,7 +33,6 @@ const WorksListTable = () => {
                                         <Button
                                             type='button'
                                             color='light'
-                                            border="border"
                                             size='btn-sm'
                                             rounded='rounded-1'
                                             icon={<i className="bi bi-pencil-square"></i>}

@@ -1,17 +1,15 @@
 import React, {useEffect, useState} from "react";
-import {createExtraWork} from "../../store/extraWorks";
 import ContainerFormWrapper from "../common/containerForm";
+import SelectDataField from "../inputs/selectDataField";
 import TextAreaField from "../common/form/textAreaField";
 import Button from "../common/button";
-import TextField from "../inputs/textField";
-import SelectDataField from "../inputs/selectDataField";
 import useTerminals from "../../hooks/useTerminals";
+import TextField from "../inputs/textField";
+import {useSelector} from "react-redux";
+import {getExtraWorksById, removeExtraWorks, updateExtraWorks} from "../../store/extraWorks";
 
-const CreateExtraWorks = () => {
-    const [data, setData] = useState({
-        extraWorks: '',
-        sum: '0'
-    })
+const EditExtraWorksPage = () => {
+    const [data, setData] = useState()
 
     const validatorConfig = {
         extraWorks: {
@@ -19,67 +17,77 @@ const CreateExtraWorks = () => {
                 message: "Это поле обязательно для заполнения"
             }
         },
-        sum: {
-            isRequired: {
-                message: "Это поле обязательно для заполнения"
-            }
-        }
     };
 
     const {
         history,
         dispatch,
-        currentDate,
+        params,
+        isLoading,
+        setIsLoading,
         month,
         year,
-        currentYearFilter,
         handleChange,
         isValid,
         validate,
         errors
     } = useTerminals(data, setData, validatorConfig)
 
-    const [isLoading, setIsLoading] = useState(true)
+    const {id} = params
+
+    const currentExtraWorks = useSelector(getExtraWorksById(id))
 
     useEffect(() => {
-        if (data) {
-            setData(prevState => ({
-                ...data,
-                month: month[currentDate.getMonth()],
-                year: currentYearFilter[0]
-            }))
+        if (currentExtraWorks && !data) {
+            setData(prevState => ({...currentExtraWorks}));
         }
-    }, [])
+    }, [currentExtraWorks, data]);
     useEffect(() => {
         if (data && isLoading) {
-            setIsLoading(false)
+            setIsLoading(false);
         }
-    }, [data])
+    }, [data]);
+
+    const handleDelete = (id) => {
+        dispatch(removeExtraWorks(id))
+        history.push('/')
+    }
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault()
         const isValid = validate();
         if (!isValid) return;
-        dispatch(createExtraWork({...data, sum: Number(data.sum)}));
-        history.push('/')
-    };
-
+        dispatch(updateExtraWorks({...data, sum: Number(data.sum)}))
+        history.goBack()
+    }
     return (
         <>
             {!isLoading && (
                 <ContainerFormWrapper>
                     <form onSubmit={handleSubmit}>
-                        <SelectDataField
-                            month={month}
-                            year={year}
-                            data={data}
-                            handleChange={handleChange}
-                        />
+                        <div className='d-flex justify-content-between'>
+                            <SelectDataField
+                                month={month}
+                                year={year}
+                                data={data}
+                                handleChange={handleChange}
+                            />
+                            <div className='d-flex align-items-center justify-content-end'>
+                                <Button
+                                    type='button'
+                                    color='danger'
+                                    size='btn-sm'
+                                    rounded='rounded-1'
+                                    icon={<i className="bi bi-trash"></i>}
+                                    onClick={() => handleDelete(currentExtraWorks._id)}
+                                />
+                            </div>
+                        </div>
                         <TextAreaField
                             label='Дополнительные работы'
                             type='text'
                             name='extraWorks'
-                            data={data.extraWorks}
+                            value={data.extraWorks}
                             onChange={handleChange}
                             error={errors.extraWorks}
                         />
@@ -87,9 +95,8 @@ const CreateExtraWorks = () => {
                             label='Сумма доработок'
                             type='number'
                             name='sum'
-                            value={data.sum}
+                            value={String(data.sum)}
                             onChange={handleChange}
-                            error={errors.sum}
                         />
                         <div className="d-flex justify-content-between">
                             <Button
@@ -113,4 +120,4 @@ const CreateExtraWorks = () => {
         </>
     )
 }
-export default CreateExtraWorks
+export default EditExtraWorksPage

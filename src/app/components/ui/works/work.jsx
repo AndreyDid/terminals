@@ -4,12 +4,16 @@ import history from "../../../utils/history";
 import PropTypes from "prop-types";
 
 const Work = ({name, sum, _id}) => {
+
     const handleClick = (id) => {
-        // history.push(history.location.pathname + `/${id}/editWork`)
         history.push(history.location.pathname + `${id}/editWork`)
     }
     return (
-            <button className={classes.work} onClick={() => handleClick(_id)}>{name}<span className={classes.workSum}>{sum}</span></button>
+        <button className={classes.work} onClick={() => handleClick(_id)}>
+            <span>{name}</span>
+            {name !== 'Без доработок'
+                && <span> - {sum}</span>}
+        </button>
     )
 }
 Work.propTypes = {

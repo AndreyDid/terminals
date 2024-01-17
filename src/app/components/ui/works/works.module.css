@@ -1,16 +1,31 @@
 
 .work {
     align-items: center;
-    margin: 0 2px 0 0;
-    padding: 1px;
-    background-color: rgba(21, 176, 37, 0.36);
-    border-radius: 2px;
+    margin: 4px 4px 4px 0;
+    padding: 4px;
+    background-color: var(--work-background-color);
+    border-radius: 4px;
     font-size: 12px;
     border: none;
 }
 .workSum {
-    background-color: rgba(11, 123, 29, 0.6);
-
+    background-color: var(--work-background-color-sum);
+    border-radius: 2px;
+    color: white;
+    font-size: 10px;
+    margin: 0 0 0 4px;
+    padding: 2px;
+}
+.workSumDanger {
+     background-color: rgba(199, 6, 6, 0.6);
+     border-radius: 2px;
+     color: white;
+     font-size: 10px;
+     margin: 0 0 0 4px;
+     padding: 2px;
+ }
+.workSumUpdate {
+    background-color: rgba(191, 13, 13, 0.6);
     border-radius: 2px;
     color: white;
     font-size: 10px;
@@ -20,7 +35,6 @@
 
 @media screen and (width < 765px) {
     .work {
-
         font-size: 8px;
         display: flex;
         flex-direction: row;

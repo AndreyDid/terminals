@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 const SelectDataField = ({month, year, data, handleChange}) => {
     return (
         <>
-            <div className='d-flex '>
+            <div className='d-flex'>
                 <div className='me-4 mw-25'>
                     <SelectField
                         label='Месяц'

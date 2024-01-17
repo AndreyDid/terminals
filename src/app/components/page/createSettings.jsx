@@ -1,95 +1,82 @@
 import React, {useEffect, useState} from "react";
-import {createExtraWork} from "../../store/extraWorks";
 import ContainerFormWrapper from "../common/containerForm";
-import TextAreaField from "../common/form/textAreaField";
-import Button from "../common/button";
 import TextField from "../inputs/textField";
-import SelectDataField from "../inputs/selectDataField";
+import Button from "../common/button";
 import useTerminals from "../../hooks/useTerminals";
+import {getSettingById, updateSetting} from "../../store/settings";
+import {useSelector} from "react-redux";
 
-const CreateExtraWorks = () => {
-    const [data, setData] = useState({
-        extraWorks: '',
-        sum: '0'
-    })
+const CreateSetting = () => {
+    const [data, setData] = useState()
 
     const validatorConfig = {
-        extraWorks: {
+        sumTerminal: {
             isRequired: {
                 message: "Это поле обязательно для заполнения"
             }
         },
-        sum: {
+        sumPgi: {
             isRequired: {
                 message: "Это поле обязательно для заполнения"
             }
-        }
+        },
     };
 
     const {
         history,
         dispatch,
-        currentDate,
-        month,
-        year,
-        currentYearFilter,
         handleChange,
         isValid,
         validate,
-        errors
+        errors,
+        setting,
+        settingLoading,
+        isLoading,
+        setIsLoading
     } = useTerminals(data, setData, validatorConfig)
 
-    const [isLoading, setIsLoading] = useState(true)
+    const currentSettings = useSelector(getSettingById(setting[0]._id))
 
     useEffect(() => {
-        if (data) {
-            setData(prevState => ({
-                ...data,
-                month: month[currentDate.getMonth()],
-                year: currentYearFilter[0]
-            }))
+        if (!settingLoading && currentSettings && !data) {
+            setData({
+                ...currentSettings,
+            })
         }
-    }, [])
+    }, [currentSettings, currentSettings, data])
     useEffect(() => {
         if (data && isLoading) {
             setIsLoading(false)
         }
     }, [data])
 
-    const handleSubmit = (e) => {
+    const handleUpdate = (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        dispatch(createExtraWork({...data, sum: Number(data.sum)}));
-        history.push('/')
+        dispatch(updateSetting({...data}));
+        history.goBack()
     };
-
     return (
         <>
             {!isLoading && (
                 <ContainerFormWrapper>
-                    <form onSubmit={handleSubmit}>
-                        <SelectDataField
-                            month={month}
-                            year={year}
-                            data={data}
-                            handleChange={handleChange}
-                        />
-                        <TextAreaField
-                            label='Дополнительные работы'
-                            type='text'
-                            name='extraWorks'
-                            data={data.extraWorks}
+                    <form onSubmit={handleUpdate}>
+                        <TextField
+                            label='Стоимость сборки терминала по умолчанию'
+                            name='sumTerminal'
+                            type='number'
+                            value={data.sumTerminal}
                             onChange={handleChange}
-                            error={errors.extraWorks}
+                            error={errors.sumTerminal}
                         />
                         <TextField
-                            label='Сумма доработок'
+                            label='Стоимость сборки ПГИ по умолчанию'
+                            name='sumPgi'
                             type='number'
-                            name='sum'
-                            value={data.sum}
+                            value={data.sumPgi}
                             onChange={handleChange}
-                            error={errors.sum}
+                            error={errors.sumPgi}
                         />
                         <div className="d-flex justify-content-between">
                             <Button
@@ -110,7 +97,9 @@ const CreateExtraWorks = () => {
                     </form>
                 </ContainerFormWrapper>
             )}
+
         </>
     )
 }
-export default CreateExtraWorks
+
+export default CreateSetting

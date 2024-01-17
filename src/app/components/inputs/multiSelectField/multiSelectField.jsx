@@ -2,7 +2,8 @@ import React from 'react'
 import Select from 'react-select'
 import PropTypes from "prop-types";
 
-const MultiSelectField = ({options, onChange, name, label, defaultValue}) => {
+const MultiSelectField = ({placeholder, options, onChange, name, label, defaultValue, error}) => {
+   
     const optionsArray =
         !Array.isArray(options) && typeof options === 'object'
             ? Object.keys(options).map(optionName => ({
@@ -15,21 +16,24 @@ const MultiSelectField = ({options, onChange, name, label, defaultValue}) => {
         onChange({name, value})
     }
     return (
-        <div className="mb-4">
-            <label className="form-label">{label}</label>
-            <Select
-                isSearchable={false}
-                isMulti
-                closeMenuOnSelect={false}
-                defaultValue={defaultValue}
-                options={optionsArray}
-                className="basic-multi-select"
-                classNamePrefix="select"
-                onChange={handleChange}
-                name={name}
-            />
-        </div>
-    )
+			<div className='mb-4'>
+				<div className='form-label'>{label}</div>
+				<Select
+					classNamePrefix='custom-multi-select'
+					className={
+						(error && 'border border-1 rounded-2 border-danger')
+					}
+					isSearchable={false}
+					isMulti
+					closeMenuOnSelect={false}
+					defaultValue={defaultValue}
+					options={optionsArray}
+					onChange={handleChange}
+					name={name}
+					placeholder={placeholder}
+				/>
+			</div>
+		)
 }
 MultiSelectField.propTypes = {
     options: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),

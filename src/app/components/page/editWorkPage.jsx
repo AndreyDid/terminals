@@ -9,7 +9,30 @@ import useTerminals from "../../hooks/useTerminals";
 const EditWorkPage = () => {
     const [data, setData] = useState()
 
-    const {history, dispatch, params, isLoading, setIsLoading, handleChange} = useTerminals(setData)
+    const validatorConfig = {
+        name: {
+            isRequired: {
+                message: "Это поле обязательно для заполнения"
+            }
+        },
+        sum: {
+            isRequired: {
+                message: "Это поле обязательно для заполнения"
+            }
+        },
+    };
+
+    const {
+        history,
+        dispatch,
+        params,
+        isLoading,
+        setIsLoading,
+        handleChange,
+        isValid,
+        validate,
+        errors
+    } = useTerminals(data, setData, validatorConfig)
 
     const {id} = params
 
@@ -25,44 +48,45 @@ const EditWorkPage = () => {
             setIsLoading(false);
         }
     }, [data]);
-
     const handleSubmit = (e) => {
         e.preventDefault()
-        dispatch(updateWork({...data}))
+        const isValid = validate();
+        if (!isValid) return;
+        dispatch(updateWork({...data, sum: Number(data.sum)}))
         history.goBack()
     }
-
     return (
         <ContainerFormWrapper>
             {!isLoading && (
                 <form onSubmit={handleSubmit}>
                     <TextField
-                        label={'Новая доработка'}
+                        label='Новая доработка'
                         name='name'
                         value={data.name}
                         onChange={handleChange}
+                        error={errors.name}
                     />
                     <TextField
-                        label={'Стиомость доработки'}
+                        label='Стиомость доработки'
                         type='number'
                         name='sum'
                         value={data.sum}
                         onChange={handleChange}
+                        error={errors.sum}
                     />
                     <div className="d-flex justify-content-between">
                         <Button
                             type="submit"
                             color="light"
                             rounded="rounded-1"
-                            border="border"
                             label="OK"
+                            disabled={!isValid}
                         />
                         <Button
                             type="button"
                             color="light"
                             onClick={() => history.goBack()}
                             icon={<i className="bi bi-x-lg"></i>}
-                            border='border'
                             rounded="rounded-1"
                         />
                     </div>

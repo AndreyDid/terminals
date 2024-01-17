@@ -2,9 +2,12 @@ import React from "react";
 import useTerminals from "../hooks/useTerminals";
 import Button from "./common/button";
 import {removeBody} from "../store/body";
+import _ from "lodash";
 
 const BodyListTable = () => {
-    const {dispatch, body, bodyLoading} = useTerminals()
+    const {dispatch, bodies, bodyLoading} = useTerminals()
+
+    const filterBodyName = _.orderBy(bodies, ['name'], ['asc'])
 
     const handleDelete = (id) => {
         dispatch(removeBody(id))
@@ -12,10 +15,10 @@ const BodyListTable = () => {
 
     return (
         <>
-            {!bodyLoading && (
+            {!bodyLoading && filterBodyName && (
                 <table className='table'>
                     <tbody>
-                    {body.map(body => (
+                    {filterBodyName.map(body => (
                         <tr key={body._id}>
                             <td>{body.name}</td>
                             <td>

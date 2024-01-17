@@ -51,6 +51,10 @@ export const dataMonth = [
 
 export const dataYear = [
     {
+        value: 'l1Z1Pt1m9gGXe_hmx4EZu',
+        label: '2022'
+    },
+    {
         value: 'l1Z0Pt1m9gGSe_hmx4EZy',
         label: '2023'
     },

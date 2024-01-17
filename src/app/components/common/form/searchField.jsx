@@ -6,7 +6,7 @@ const SearchField = ({ name, value, onChange }) => {
         <div className="input-group flex-nowrap">
             <input
                 type="number"
-                className="form-control"
+                className="app_input form-control"
                 placeholder="Поиск по номеру..."
                 name={name}
                 value={value}

@@ -12,7 +12,9 @@ const TerminalsListPage = () => {
     return (
         <>
             {!terminalsLoading && !extraWorkLoading && terminals && extraWorks && (
-                <TerminalsTable data={terminals} extraWorks={extraWorks}/>
+                <>
+                        <TerminalsTable terminals={terminals} extraWorks={extraWorks}/>
+                </>
             )}
         </>
     )
