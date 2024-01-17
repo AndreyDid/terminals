@@ -24,9 +24,9 @@ function App() {
 			<ThemeProvider>
 				<AppLoader>
 					<Switch>
-						<Route path='/:id?/editExtraWorks' component={EditExtraWorksPage} />
-						<Route path='/:id?/editWork' component={EditWorkPage} />
-						<Route path='/:id?/editTerminal' component={EditTerminalPage} />
+						<Route path='terminals/:id?/editExtraWorks' component={EditExtraWorksPage} />
+						<Route path='terminals/:id?/editWork' component={EditWorkPage} />
+						<Route path='terminals/:id?/editTerminal' component={EditTerminalPage} />
 						<Route path='/statistics' component={Statistics} />
 						<Route path='/createExtraWorks' component={CreateExtraWorks} />
 						<Route path='/createWorks' component={CreateWorks} />
