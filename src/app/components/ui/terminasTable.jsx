@@ -100,11 +100,13 @@ const TerminalsTable = ({terminals, extraWorks}) => {
 
     //--------------------------------------------------
     const handleClick = (id) => {
-        history.push(history.location.pathname + `${id}/editTerminal`)
+        history.push(history.location.pathname + `/${id}/editTerminal`)
+        // history.push(history.location.pathname + `${id}/editTerminal`)
     }
 
     const handleClickExtraWorks = (id) => {
-        history.push(history.location.pathname + `${id}/editExtraWorks`)
+        history.push(history.location.pathname + `/${id}/editExtraWorks`)
+        // history.push(history.location.pathname + `${id}/editExtraWorks`)
     }
 
     const handleDelete = (orderId) => {
