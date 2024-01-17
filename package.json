@@ -2,6 +2,7 @@
   "name": "kompanion-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://andreydid.github.io/terminals/",
   "dependencies": {
     "@carbon/charts-react": "^1.6.9",
     "@reduxjs/toolkit": "^1.9.5",
