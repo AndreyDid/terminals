@@ -61,7 +61,7 @@ const CreateExtraWorks = () => {
         const isValid = validate();
         if (!isValid) return;
         dispatch(createExtraWork({...data, sum: Number(data.sum)}));
-        history.push('/')
+        history.push('/terminals')
     };
 
     return (

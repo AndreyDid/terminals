@@ -146,7 +146,6 @@ const EditTerminalPage = () => {
         if (!isValid) return;
         const newData = {
             ...data,
-            checkBox: false,
             number: Number(data.number),
             works: data.works.map(w => w.value),
             body: data.body.value,
@@ -156,20 +155,21 @@ const EditTerminalPage = () => {
                     : Number(sumTerminalDefault) + allWorksPrice,
         }
         if (updateOrder) {
-            for (const items of order) {
+           for (const items of order) {
                 const newDataOrder = {
                     ...data,
                     _id: items._id,
                     number: Number(items.number),
                     works: data.works.map(w => w.value),
                     body: data.body.value,
+                    created_at: items.created_at,
                     sum:
                         data.body.label === 'ПГИ'
                             ? Number(sumPgiDefault) + allWorksPrice
                             : Number(sumTerminalDefault) + allWorksPrice,
                 }
                 setValue(items.number)
-                dispatch(updateTerminal({...newDataOrder}));
+               dispatch(updateTerminal({...newDataOrder}));
             }
         } else {
             dispatch(

@@ -131,14 +131,16 @@ const Statistics = () => {
                                         </td>
                                     ))}
                                 </tr>
-                                <tr>
-                                    <th>Кол-во ПГИ</th>
-                                    {year.map(y => (
-                                        <td key={y.value}>
-                                            <span>{filterTerminalPgiQuantityYear(y.label)}</span>
-                                        </td>
-                                    ))}
-                                </tr>
+                                {!findIdPgi && (
+                                    <tr>
+                                        <th>Кол-во ПГИ</th>
+                                        {year.map(y => (
+                                            <td key={y.value}>
+                                                <span>{filterTerminalPgiQuantityYear(y.label)}</span>
+                                            </td>
+                                        ))}
+                                    </tr>
+                                )}
                                 </tfoot>
                             </table>
                         </div>

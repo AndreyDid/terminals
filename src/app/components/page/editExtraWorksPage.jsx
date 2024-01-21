@@ -50,7 +50,7 @@ const EditExtraWorksPage = () => {
 
     const handleDelete = (id) => {
         dispatch(removeExtraWorks(id))
-        history.push('/')
+        history.push('/terminals')
     }
 
     const handleSubmit = (e) => {
