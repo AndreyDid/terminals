@@ -1,11 +1,11 @@
 <div>
-    <h1 style="text-align: center">Terminals App</h1>
-  <p style="text-align: center">
+    <h1 align="center">Terminals App</h1>
+  <p align="center">
     <a href="https://andreydid.github.io/terminals/">Посмотреть Демо</a>
   </p>
 </div>
 
-<div style="text-align: center">
+<div align="center">
     <img src="https://s111vlx.storage.yandex.net/rdisk/f1e2a9aff43a4cd93b4c482af359d0f1903668990daa23ba0ca5dd16357efacb/65aed4fb/suGJIKVCGGNZFyAblFWP_2zK43mJ-SblsXc0EjpuCkg93oA-m3XV5JESQJ9syDl7-3qRPJQ9BalICK7iwA8Ipw==?uid=0&filename=2024-01-22_19-49-47.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&fsize=42766&hid=be337501e103b7216209d1fe110d722b&media_type=image&tknv=v2&etag=c14d8a9f81abbc94ce095ea923f0b4f9&rtoken=IkQ8vzNqZefM&force_default=no&ycrid=na-a937c5613262ebbff0316a1b1b2c0fe5-downloader1h&ts=60f8ef952f4c0&s=ca92602b660eee147cf1aa77fe0cb8938639549d745e60ad2817b69ce529f436&pb=U2FsdGVkX1-4QROvRFd_rscyLmVTdvl6v2Vlkb59JG2jqeyFubvSVV_iS6sOrOysKf2juenOgC0q6nZX_uv6xJq0jqz7m7JFWeWoMTFvsR8" alt="Image terminals app" width="640" height="360">
 </div>
 
