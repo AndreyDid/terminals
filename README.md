@@ -1,7 +1,7 @@
 <div>
     <h1 align="center">Terminals App</h1>
   <p align="center">
-    <a href="https://andreydid.github.io/terminals/">Посмотреть Демо</a>
+    <a href="https://andreydid.github.io/terminals/" target="_blank">Посмотреть Демо</a>
     ·
   </p>
 </div>
