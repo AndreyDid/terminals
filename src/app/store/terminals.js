@@ -1,7 +1,6 @@
 import {createAction, createSlice} from "@reduxjs/toolkit";
 import terminalService from "../services/terminal.services";
 import {nanoid} from "nanoid";
-import {toast} from "react-toastify";
 
 const TerminalSlice = createSlice({
     name: "terminals",
@@ -84,19 +83,8 @@ export const createTerminal = (payload) =>
             }
             await terminalService.createTerminal(terminal);
             dispatch(terminalCreated(terminal));
-            toast.info(`${payload.number} успешно добавлен`, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            });
-
         } catch (error) {
-            toast('Error')
+            dispatch(terminalsRequestFailed(error.message));
         }
     };
 

@@ -14,12 +14,7 @@ const CreateSetting = () => {
             isRequired: {
                 message: "Это поле обязательно для заполнения"
             }
-        },
-        sumPgi: {
-            isRequired: {
-                message: "Это поле обязательно для заполнения"
-            }
-        },
+        }
     };
 
     const {
@@ -69,14 +64,6 @@ const CreateSetting = () => {
                             value={data.sumTerminal}
                             onChange={handleChange}
                             error={errors.sumTerminal}
-                        />
-                        <TextField
-                            label='Стоимость сборки ПГИ по умолчанию'
-                            name='sumPgi'
-                            type='number'
-                            value={data.sumPgi}
-                            onChange={handleChange}
-                            error={errors.sumPgi}
                         />
                         <div className="d-flex justify-content-between">
                             <Button

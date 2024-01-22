@@ -12,11 +12,8 @@ const Statistics = () => {
     const extraWorks = useSelector(getExtraWork())
     const terminalsLoading = useSelector(getTerminalLoadingStatus())
     const extraWorkLoading = useSelector(getExtraWorkLoadingStatus())
+    const {year, month, history} = useTerminals()
 
-    const {year, month, history, bodies, bodyLoading} =
-        useTerminals()
-
-    const findIdPgi = bodies.filter(body => body.name === 'ПГИ')
     const filterSumTerminalsYear = (year) => {
         const filterTerminals = terminals.filter(t => t.year.label === year)
         const sumTerminals = filterTerminals.map(terminal => terminal.sum)
@@ -41,14 +38,7 @@ const Statistics = () => {
     }
     const filterTerminalQuantityYear = (year) => {
         const quantityTerminals = terminals.filter(t => t.year.label === year)
-        const quantityTerminalsNotPgi = quantityTerminals.filter(terminal => terminal.body !== findIdPgi[0]._id).length
-        return quantityTerminalsNotPgi
-    }
-
-    const filterTerminalPgiQuantityYear = (year) => {
-        const quantityTerminals = terminals.filter(t => t.year.label === year)
-        const quantityTerminalsPgi = quantityTerminals.filter(terminal => terminal.body === findIdPgi[0]._id).length
-        return quantityTerminalsPgi
+        return quantityTerminals.length
     }
 
     const filterTerminalPriceMonth = (month, year) => {
@@ -65,7 +55,7 @@ const Statistics = () => {
 
     return (
         <>
-            {!terminalsLoading && !extraWorkLoading && !bodyLoading && terminals && extraWorks && bodies && (
+            {!terminalsLoading && !extraWorkLoading && terminals && extraWorks && (
                 <div className='container flex-column mt-2'>
                     <div>
                         <Button
@@ -131,16 +121,6 @@ const Statistics = () => {
                                         </td>
                                     ))}
                                 </tr>
-                                {!findIdPgi && (
-                                    <tr>
-                                        <th>Кол-во ПГИ</th>
-                                        {year.map(y => (
-                                            <td key={y.value}>
-                                                <span>{filterTerminalPgiQuantityYear(y.label)}</span>
-                                            </td>
-                                        ))}
-                                    </tr>
-                                )}
                                 </tfoot>
                             </table>
                         </div>

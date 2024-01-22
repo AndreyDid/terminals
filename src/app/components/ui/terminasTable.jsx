@@ -93,11 +93,6 @@ const TerminalsTable = ({terminals, extraWorks}) => {
     const resultAllExtraWorkSumPrice = allExtraWorkSumPrice
     const resultAllTermSumPrice = sumAllTermPrice
 
-    const percent = 5
-    const worksSumPrice = filteredExtraWorks.length > 0 ? resultAllTermSumPrice + (selectedMonth === null ? resultAllExtraWorkSumPrice : Number(filteredExtraWorks[0].sum)) : resultAllTermSumPrice + 0
-    const result = worksSumPrice / 100 * percent
-
-
     //--------------------------------------------------
     const handleClick = (id) => {
         history.push(history.location.pathname + `${id}/editTerminal`)
@@ -390,8 +385,7 @@ const TerminalsTable = ({terminals, extraWorks}) => {
                                 <th>{terminalCount}</th>
                                 <th colSpan='3' className='text-end'>
                                     {resultAllTermSumPrice} + {resultAllExtraWorkSumPrice} ={' '}
-                                    {resultAllTermSumPrice + resultAllExtraWorkSumPrice} - 5%(
-                                    {result}) = {worksSumPrice - result}
+                                    {resultAllTermSumPrice + resultAllExtraWorkSumPrice}
                                 </th>
                             </tr>
                             <tr>
@@ -408,9 +402,6 @@ const TerminalsTable = ({terminals, extraWorks}) => {
                     )}
                 </table>
             </div>
-            {/*<Modal showModal={showModal} onClose={() => setShowModal(false)}>*/}
-            {/*	<CreateSetting/>*/}
-            {/*</Modal>*/}
         </div>
     )
 }

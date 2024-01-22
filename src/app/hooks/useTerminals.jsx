@@ -8,6 +8,7 @@ import {validator} from "../utils/validator";
 import {getSetting, getSettingLoadingStatus} from "../store/settings";
 
 const useTerminals = (data, setData, validatorConfig) => {
+
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
@@ -44,34 +45,34 @@ const useTerminals = (data, setData, validatorConfig) => {
 
     const [isLoading, setIsLoading] = useState(true)
 
-    const handleChange =(target) => {
+    const handleChange = (target) => {
         setData((prevState) => ({...prevState, [target.name]: target.value}));
     };
     return {
-			setting,
-			settingLoading,
-			history,
-			params,
-			dispatch,
-			bodies,
-			works,
-			bodyLoading,
-			workLoading,
-			currentDate,
-			isLoading,
-			setIsLoading,
-			month,
-			year,
-			currentYearFilter,
-			currentYear,
-			currentMonth,
-			handleChange,
-			validate,
-			useEffect,
-			isValid,
-			errors,
-			data,
-		}
+        setting,
+        settingLoading,
+        history,
+        params,
+        dispatch,
+        bodies,
+        works,
+        bodyLoading,
+        workLoading,
+        currentDate,
+        isLoading,
+        setIsLoading,
+        month,
+        year,
+        currentYearFilter,
+        currentYear,
+        currentMonth,
+        handleChange,
+        validate,
+        useEffect,
+        isValid,
+        errors,
+        data,
+    }
 }
 
 export default useTerminals

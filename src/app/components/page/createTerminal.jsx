@@ -15,7 +15,6 @@ const CreateTerminal = () => {
     const {setting, settingLoading} = useTerminals()
 
     const sumTerminalDefault = !settingLoading && setting[0].sumTerminal
-    const sumPgiDefault = !settingLoading && setting[0].sumPgi
 
     const [data, setData] = useState({
         month: '',
@@ -92,7 +91,7 @@ const CreateTerminal = () => {
                 ...data,
                 month: month[currentDate.getMonth()],
                 year: currentYearFilter[0],
-                sum: data.body.label === 'ПГИ' ? Number(sumPgiDefault) : Number(sumTerminalDefault)
+                sum: Number(sumTerminalDefault)
             })
         }
     }, [])
@@ -115,7 +114,7 @@ const CreateTerminal = () => {
                 singleOrder: orderId,
                 works: data.works.map(w => w.value),
                 body: data.body.value,
-                sum: data.body.label === 'ПГИ' ? Number(500) + allWorksPrice : Number(data.sum) + allWorksPrice
+                sum: Number(data.sum) + allWorksPrice
             }
             setValue(i)
             await dispatch(createTerminal({...newData}));

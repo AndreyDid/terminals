@@ -64,7 +64,6 @@ const EditTerminalPage = () => {
     } = useTerminals(data, setData, validatorConfig)
 
     const sumTerminalDefault = !settingLoading && setting[0].sumTerminal
-    const sumPgiDefault = !settingLoading && setting[0].sumPgi
 
     const {id} = params
 
@@ -149,10 +148,7 @@ const EditTerminalPage = () => {
             number: Number(data.number),
             works: data.works.map(w => w.value),
             body: data.body.value,
-            sum:
-                data.body.label === 'ПГИ'
-                    ? Number(sumPgiDefault) + allWorksPrice
-                    : Number(sumTerminalDefault) + allWorksPrice,
+            sum: Number(sumTerminalDefault) + allWorksPrice,
         }
         if (updateOrder) {
            for (const items of order) {
@@ -163,10 +159,7 @@ const EditTerminalPage = () => {
                     works: data.works.map(w => w.value),
                     body: data.body.value,
                     created_at: items.created_at,
-                    sum:
-                        data.body.label === 'ПГИ'
-                            ? Number(sumPgiDefault) + allWorksPrice
-                            : Number(sumTerminalDefault) + allWorksPrice,
+                    sum: Number(sumTerminalDefault) + allWorksPrice,
                 }
                 setValue(items.number)
                dispatch(updateTerminal({...newDataOrder}));
@@ -245,7 +238,7 @@ const EditTerminalPage = () => {
                             label='Сумма'
                             type='number'
                             name='sum'
-                            value={data.body.label === 'ПГИ' ? Number(sumPgiDefault) : Number(sumTerminalDefault)}
+                            value={Number(sumTerminalDefault)}
                             onChange={handleChange}
                             isDisabled={true}
                             error={errors.sum}
