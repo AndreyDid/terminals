@@ -15,6 +15,7 @@ const CreateTerminal = () => {
     const {setting, settingLoading} = useTerminals()
 
     const sumTerminalDefault = !settingLoading && setting[0].sumTerminal
+    const sumPgiDefault = !settingLoading && setting[0].sumPgi
 
     const [data, setData] = useState({
         month: '',
@@ -84,6 +85,7 @@ const CreateTerminal = () => {
     const handleChangeEnd = (target) => {
         setNumberTo((prevState) => ({...prevState, [target.name]: target.value}));
     };
+    const filterWorksName = filterName(works)
 
     useEffect(() => {
         if (data && !settingLoading) {
@@ -91,7 +93,8 @@ const CreateTerminal = () => {
                 ...data,
                 month: month[currentDate.getMonth()],
                 year: currentYearFilter[0],
-                sum: Number(sumTerminalDefault)
+                works: [filterWorksName.map(w => ({label: w.name, value: w._id, sum: w.sum})).find(w => w.label === 'Без доработок')],
+                sum: data.body.label === 'ПГИ' ? Number(sumPgiDefault) : Number(sumTerminalDefault)
             })
         }
     }, [])
@@ -114,14 +117,13 @@ const CreateTerminal = () => {
                 singleOrder: orderId,
                 works: data.works.map(w => w.value),
                 body: data.body.value,
-                sum: Number(data.sum) + allWorksPrice
+                sum: data.body.label === 'ПГИ' ? Number(500) + allWorksPrice : Number(data.sum) + allWorksPrice
             }
             setValue(i)
             await dispatch(createTerminal({...newData}));
         }
         history.goBack()
     };
-
     const handleIncrement = useCallback(() => {
         return setNumberTo(prevState => ({...numberTo, number: Number(numberTo.number) + Number(1)}))
     }, [numberTo])
@@ -133,17 +135,7 @@ const CreateTerminal = () => {
     if (!bodyLoading && !workLoading) {
 
         const filterBodyName = filterName(bodies)
-        const bodyList = filterBodyName.map(b => ({
-            label: b.name,
-            value: b._id
-        }))
 
-        const filterWorksName = filterName(works)
-        const worksList = filterWorksName.map(b => ({
-            label: b.name,
-            value: b._id,
-            sum: b.sum
-        }))
         return (
             <ContainerFormWrapper>
                 <h2 className='text-secondary'>Новый терминал</h2>
@@ -192,7 +184,10 @@ const CreateTerminal = () => {
                         <SelectField
                             label='Корпус'
                             name="body"
-                            options={bodyList}
+                            options={filterBodyName.map(b => ({
+                                label: b.name,
+                                value: b._id
+                            }))}
                             onChange={handleChange}
                             value={data.body}
                             placeholder='Выбрать корпус...'
@@ -201,9 +196,14 @@ const CreateTerminal = () => {
                         <MultiSelectField
                             label='Доработки'
                             name='works'
-                            options={worksList}
+                            options={filterWorksName.map(b => ({
+                                label: b.name,
+                                value: b._id,
+                                sum: b.sum
+                            }))}
                             onChange={handleChange}
                             value={data.works}
+                            defaultValue={[filterWorksName.map(w => ({label: w.name, value: w._id})).find(w => w.label === 'Без доработок')]}
                             placeholder='Выбрать доработки...'
                             error={errors.works}
                         />
