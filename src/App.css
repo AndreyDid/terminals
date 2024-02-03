@@ -4,8 +4,13 @@
   text-align: center;
 }
 
+.modal-content {
+  background-color: var(--background-color-secondary);
+  border-color: var(--button-border-color);
+}
+
 .body {
-  background-color: var(--background-color);
+  background-color: var(--work-background-color);
 }
 
 .app_table-container {
@@ -64,7 +69,7 @@ td, th {
 .app_input:-webkit-autofill:hover,
 .app_input:-webkit-autofill:focus {
   -webkit-text-fill-color: var(--text-color);
-  -webkit-box-shadow: 0 0 0px 40rem var(--input-background-color) inset;
+  -webkit-box-shadow: 0 0 0 40rem var(--input-background-color) inset;
 }
 
 .app_input:disabled {

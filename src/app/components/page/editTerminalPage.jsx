@@ -265,7 +265,6 @@ const EditTerminalPage = () => {
                                         label="OK"
                                         disabled={!isValid}
                                     />
-
                                     <Button
                                         type="button"
                                         color="light"

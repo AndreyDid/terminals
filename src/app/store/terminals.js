@@ -88,15 +88,12 @@ export const createTerminal = (payload) =>
         }
     };
 
-
 export const getIsLoggedIn = () => state => state.terminals.isLoggedIn
-
 
 export const updateTerminal = (payload) => async (dispatch) => {
     dispatch(terminalUpdateRequested());
     await terminalService.updateTerminal(payload);
     dispatch(terminalUpdate(payload));
-
 };
 
 export const getTerminalById = (id) => (state) => {

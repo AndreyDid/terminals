@@ -10,12 +10,26 @@ import useTerminals from "../../hooks/useTerminals";
 import history from "../../utils/history";
 import PropTypes from "prop-types";
 import Select from "react-select";
-import {removeTerminal} from "../../store/terminals";
 import {ThemeContext} from "../../hooks/themeProvider";
-import UpdateSumBtn from "../updateSumBtn";
 import CheckBox from "../checkbox";
+import ModalUpdatePrice from "../modalUpdatePrice";
+import ModalDeleteOrderTerm from "../modalDeleteOrderTerm";
 
 const TerminalsTable = ({terminals, extraWorks}) => {
+
+    const [orderId, setOrderId] = useState('')
+    const [modalUpdatePrice, setModalUpdatePrice] = useState(false)
+    const [modalDeleteOrderTerm, setModalDeleteOrderTerm] = useState(false)
+
+    const handleShowModal = () => {
+        setModalUpdatePrice((prevState) => !prevState)
+    }
+
+    const handleShowModalDeleteOrder = (orderId) => {
+        setModalDeleteOrderTerm((prevState) => !prevState)
+        setOrderId(orderId)
+    }
+
     const [btnOn, setBtnOn] = useState(true)
 
     const [theme, setTheme] = useContext(ThemeContext)
@@ -89,10 +103,6 @@ const TerminalsTable = ({terminals, extraWorks}) => {
     const filterSumAllPriceExtraWorks = filteredExtraWorks.map(e => e.sum)
     const sumAllTermPrice = sumPrice(filterSumAllPrice)
     const allExtraWorkSumPrice = sumPrice(filterSumAllPriceExtraWorks)
-
-    const resultAllExtraWorkSumPrice = allExtraWorkSumPrice
-    const resultAllTermSumPrice = sumAllTermPrice
-
     //--------------------------------------------------
     const handleClick = (id) => {
         history.push(history.location.pathname + `${id}/editTerminal`)
@@ -100,19 +110,6 @@ const TerminalsTable = ({terminals, extraWorks}) => {
 
     const handleClickExtraWorks = (id) => {
         history.push(history.location.pathname + `${id}/editExtraWorks`)
-    }
-
-    const handleDelete = (orderId) => {
-        const order = filteredTerminal.filter(order => order.singleOrder === orderId)
-        for (const items of order) {
-            dispatch(removeTerminal(items._id))
-        }
-    }
-
-    const [showUpdateSumBtn, setShowUpdateSumBtn] = useState(false)
-
-    const handleShowModal = () => {
-        setShowUpdateSumBtn((prevState) => !prevState)
     }
 
     const checkBtn = () => {
@@ -141,7 +138,7 @@ const TerminalsTable = ({terminals, extraWorks}) => {
                                 role='switch'
                                 id='flexSwitchCheckDefault'
                                 onChange={() => changeTheme()}
-                                checked={theme === 'light' ? false : true}
+                                checked={theme !== 'light'}
                             />
                             <i className='bi bi-moon-fill ms-2 '></i>
                         </div>
@@ -238,27 +235,17 @@ const TerminalsTable = ({terminals, extraWorks}) => {
                             </Link>
                         </th>
                         <th scope='col' className='col-1' colSpan='2'>
-                            {!showUpdateSumBtn && (
-                                <button
-                                    type='button'
-                                    className='btn btn-light btn-sm d-flex justify-content-between fw-bold'
-                                    data-bs-toggle='tooltip'
-                                    data-bs-placement='top'
-                                    title='Обновить цену терминалов в месяце'
-                                    onClick={handleShowModal}
-                                >
-                                    <span>Цена</span>
-                                </button>
-                            )}
-                            {showUpdateSumBtn && (
-                                <UpdateSumBtn
-                                    terminals={filteredTerminal}
-                                    showModal={showUpdateSumBtn}
-                                    setShowModal={setShowUpdateSumBtn}
-                                    dispatch={dispatch}
-                                    setting={setting}
-                                />
-                            )}
+                            <button
+                                disabled={searchQuery || !selectedMonth || filteredTerminal.length === 0 || undefined}
+                                type='button'
+                                className='btn btn-light btn-sm d-flex justify-content-between fw-bold'
+                                data-bs-toggle='tooltip'
+                                data-bs-placement='top'
+                                title='Обновить цену терминалов в месяце'
+                                onClick={handleShowModal}
+                            >
+                                <span>Цена</span>
+                            </button>
                         </th>
                     </tr>
                     </thead>
@@ -322,7 +309,7 @@ const TerminalsTable = ({terminals, extraWorks}) => {
                                                         size='btn-sm'
                                                         rounded='rounded-1'
                                                         icon={<i className='bi bi-trash'></i>}
-                                                        onClick={() => handleDelete(t.singleOrder)}
+                                                        onClick={() => handleShowModalDeleteOrder(t.singleOrder)}
                                                     />
                                                 </div>
                                             )}
@@ -337,7 +324,7 @@ const TerminalsTable = ({terminals, extraWorks}) => {
                         <tr>
                             <th scope='row' colSpan='6'>
                                 <div className='d-grid mx-auto'>
-                                    {!filteredExtraWorks.length > 0 ? (
+                                    {selectedMonth && !filteredExtraWorks.length > 0 ? (
                                         <Link
                                             to={'/createExtraWorks'}
                                             className='d-flex justify-content-between btn btn-light'
@@ -384,24 +371,42 @@ const TerminalsTable = ({terminals, extraWorks}) => {
                                 </th>
                                 <th>{terminalCount}</th>
                                 <th colSpan='3' className='text-end'>
-                                    {resultAllTermSumPrice} + {resultAllExtraWorkSumPrice} ={' '}
-                                    {resultAllTermSumPrice + resultAllExtraWorkSumPrice}
+                                    {sumAllTermPrice} + {allExtraWorkSumPrice} ={' '}
+                                    {sumAllTermPrice + allExtraWorkSumPrice}
                                 </th>
                             </tr>
-                            <tr>
-                                <th scope='row' colSpan='6'>
-                                    <div className='d-grid mx-auto'>
-                                        <Link to={'/createTerminal'} className='btn btn-light'>
-                                            +
-                                        </Link>
-                                    </div>
-                                </th>
-                            </tr>
+                            {selectedMonth && (
+                                <tr>
+                                    <th scope='row' colSpan='6'>
+                                        <div className='d-grid mx-auto'>
+                                            <Link to={'/createTerminal'} className='btn btn-light'>
+                                                +
+                                            </Link>
+                                        </div>
+                                    </th>
+                                </tr>
+                            )}
                         </>
                         </tfoot>
                     )}
                 </table>
             </div>
+            {modalUpdatePrice &&
+                <ModalUpdatePrice
+                    hide={setModalUpdatePrice}
+                    terminals={filteredTerminal}
+                    dispatch={dispatch}
+                    setting={setting}
+                    month={selectedMonth}
+                    year={selectedYear}
+                />}
+            {modalDeleteOrderTerm &&
+                <ModalDeleteOrderTerm
+                    hide={setModalDeleteOrderTerm}
+                    filteredTerminal={filteredTerminal}
+                    dispatch={dispatch}
+                    orderId={orderId}
+                />}
         </div>
     )
 }
