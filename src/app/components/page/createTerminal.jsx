@@ -15,7 +15,6 @@ const CreateTerminal = () => {
     const {setting, settingLoading} = useTerminals()
 
     const sumTerminalDefault = !settingLoading && setting[0].sumTerminal
-    const sumPgiDefault = !settingLoading && setting[0].sumPgi
 
     const [data, setData] = useState({
         month: '',
@@ -94,7 +93,7 @@ const CreateTerminal = () => {
                 month: month[currentDate.getMonth()],
                 year: currentYearFilter[0],
                 works: [filterWorksName.map(w => ({label: w.name, value: w._id, sum: w.sum})).find(w => w.label === 'Без доработок')],
-                sum: data.body.label === 'ПГИ' ? Number(sumPgiDefault) : Number(sumTerminalDefault)
+                sum: Number(sumTerminalDefault)
             })
         }
     }, [])
@@ -125,7 +124,7 @@ const CreateTerminal = () => {
         history.goBack()
     };
     const handleIncrement = useCallback(() => {
-        return setNumberTo(prevState => ({...numberTo, number: Number(numberTo.number) + Number(1)}))
+        return setNumberTo(prevState => ({...prevState, number: Number(numberTo.number) + Number(1)}))
     }, [numberTo])
 
     function filterName(arr) {
