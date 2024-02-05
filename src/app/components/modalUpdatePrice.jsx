@@ -53,16 +53,15 @@ const ModalUpdatePrice = ({hide, terminals, dispatch, setting, month, year}) => 
         return result
     }
 
-    const transformLabelMonth = (label, ending) => {
-        const labelLowerCase = label.toLowerCase()
-
-        if (labelLowerCase.slice(-1) === 'ь') {
-            return labelLowerCase.replace('ь', ending)
-
+    const changeMonthEnding = (month) => {
+        const lastChar = month[month.length -1]
+        const monthLowerCase = month.toLowerCase()
+        if (lastChar === 'ь') {
+            return monthLowerCase.replace('ь', 'е')
         }
-        if (labelLowerCase.slice(-1) === 'й') {
-            return labelLowerCase.replace('й', ending)
-        } else return labelLowerCase + ending
+        if (lastChar === 'й') {
+            return monthLowerCase.replace('й', 'е')
+        } else return monthLowerCase + 'е'
     }
 
     const handleSubmit = async e => {
@@ -111,7 +110,7 @@ const ModalUpdatePrice = ({hide, terminals, dispatch, setting, month, year}) => 
                     </div>
                     <div className="modal-body">
                         <p>Цена всех терминалов
-                            в <b>{month ? transformLabelMonth(month.label, 'е') : ''} {year.label} года</b> обновится в
+                            в <b>{month ? changeMonthEnding(month.label) : ''} {year.label} года</b> обновится в
                             соответствии с ценой сборки по умолчанию ( <b>{setting[0].sumTerminal} руб.</b> ).</p>
                         <p>Вы уверены что хотите обновить цену?</p>
                     </div>
