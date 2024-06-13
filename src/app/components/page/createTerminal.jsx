@@ -202,7 +202,7 @@ const CreateTerminal = () => {
                             }))}
                             onChange={handleChange}
                             value={data.works}
-                            defaultValue={[filterWorksName.map(w => ({label: w.name, value: w._id})).find(w => w.label === 'Без доработок')]}
+                            defaultValue={[filterWorksName.map(w => ({label: w.name, value: w._id, sum: w.sum})).find(w => w.label === 'Без доработок')]}
                             placeholder='Выбрать доработки...'
                             error={errors.works}
                         />
